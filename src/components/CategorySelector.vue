@@ -1,20 +1,36 @@
 <template>
-  <div class="flex gap-4 mb-4">
+  <div class="flex flex-wrap gap-2 mb-4">
     <button
-      v-for="tab in tabs"
-      :key="tab"
-      @click="$emit('select', tab)"
+      v-for="option in options"
+      :key="option.label"
+      @click="select(option)"
       :class="[
-        'px-4 py-2 rounded',
-        selected === tab ? 'bg-blue-500 text-white' : 'bg-gray-200'
+        'px-4 py-2 rounded-lg text-sm',
+        selected.label === option.label ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
       ]"
     >
-      {{ tab }}
+      {{ option.label }}
     </button>
   </div>
 </template>
 
 <script setup>
-defineProps({ selected: String })
-const tabs = ['Popular', 'Top Rated']
+import { ref } from 'vue'
+
+const emit = defineEmits(['change'])
+
+const options = [
+  { label: 'Popular Movies', type: 'movie', category: 'popular' },
+  { label: 'Top Rated Movies', type: 'movie', category: 'top_rated' },
+  { label: 'Popular TV Shows', type: 'tv', category: 'popular' },
+  { label: 'Top Rated TV Shows', type: 'tv', category: 'top_rated' },
+]
+
+const selected = ref(options[0])
+emit('change', selected.value)
+
+function select(option) {
+  selected.value = option
+  emit('change', option)
+}
 </script>
